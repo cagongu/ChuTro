@@ -23,8 +23,9 @@ public class Building {
     private String buildingName;
     private int numberOfFloors;
 
-    @OneToMany(mappedBy = "building")
+    @OneToMany(mappedBy = "building", cascade = CascadeType.PERSIST)
     private Set<Room> rooms;
+
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
 }

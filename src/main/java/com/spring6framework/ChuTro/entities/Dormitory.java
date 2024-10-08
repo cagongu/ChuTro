@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +22,10 @@ public class Dormitory {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID dormitoryId;
     private String DormitoryName;
+
+    @OneToMany(mappedBy = "dormitory", cascade = CascadeType.ALL)
+    private Set<Room> rooms = new HashSet<>();
+
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
 }

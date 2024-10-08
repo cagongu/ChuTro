@@ -23,21 +23,28 @@ public class Room {
     @JdbcTypeCode(SqlTypes.CHAR)
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID roomId;
+
     private Long roomNumber;
     private String roomName;
     private Long floorNumber;
     private Double area;
     private Double price;
+    private RoomType roomType;
+
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdDate;
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
+
     private RoomStatus status;
     private double electricityDefault;
     private double waterDefault;
-    private RoomType roomType;
     private int maxOccupants;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Building building;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Dormitory dormitory;
 }
