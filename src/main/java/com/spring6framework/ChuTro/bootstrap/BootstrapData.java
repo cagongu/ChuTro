@@ -71,6 +71,8 @@ public class BootstrapData implements CommandLineRunner {
             room.getServices().add(water);
             room.getServices().add(wifi);
             room.getServices().add(trash);
+
+            roomRepository.save(room);
         }
     }
 
