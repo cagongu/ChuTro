@@ -1,17 +1,17 @@
 package com.spring6framework.ChuTro.Services;
 
-import com.spring6framework.ChuTro.controller.NotFoundException;
-import com.spring6framework.ChuTro.entities.Building;
-import com.spring6framework.ChuTro.entities.Dormitory;
+import com.spring6framework.ChuTro.Exception.AppException;
+import com.spring6framework.ChuTro.Exception.ErrorCode;
+import com.spring6framework.ChuTro.dto.request.RoomCreationRequest;
+import com.spring6framework.ChuTro.dto.request.RoomUpdateRequest;
+import com.spring6framework.ChuTro.dto.response.RoomResponse;
+import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.entities.Room;
-import com.spring6framework.ChuTro.entities.RoomType;
-
+import com.spring6framework.ChuTro.enums.RoomStatus;
 import com.spring6framework.ChuTro.mappers.RoomMapper;
-import com.spring6framework.ChuTro.model.RoomDTO;
-
-import com.spring6framework.ChuTro.repositories.BuildingRepository;
-import com.spring6framework.ChuTro.repositories.DormitoryRepository;
+import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
 import com.spring6framework.ChuTro.repositories.RoomRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,47 +30,42 @@ import java.util.UUID;
 public class RoomServiceImpl implements RoomService {
     private final RoomMapper roomMapper;
     private final RoomRepository roomRepository;
-    private final BuildingRepository buildingRepository;
-    private final DormitoryRepository dormitoryRepository;
+    private final HousesForRentRepository housesForRentRepository;
 
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_PAGE_SIZE = 25;
 
+    @Transactional
     @Override
-    public Optional<RoomDTO> getRoomById(UUID id) {
+    public Optional<RoomResponse> getRoomById(UUID id) {
         log.info("Get Beer by Id - in service");
-        return Optional.ofNullable(roomMapper.roomToRoomDto(roomRepository.findById(id)
-                .orElse(null)));
+        return Optional.ofNullable(roomMapper.roomToRoomResponse(roomRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND))));
     }
 
+    @Transactional
     @Override
-    public Page<RoomDTO> getAll(String roomName, RoomType roomType, Integer pageNumber, Integer pageSize) {
+    public Page<RoomResponse> getAll(String roomName, Integer pageNumber, Integer pageSize) {
         log.info("List Beers - in service");
 
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Room> roomPage;
 
-        if (StringUtils.hasText(roomName) && roomType == null) {
+        if (StringUtils.hasText(roomName)) {
             roomPage = getAllByName(roomName, pageRequest);
-        } else if (!StringUtils.hasText(roomName) && roomType != null) {
-            roomPage = getAllByRoomType(roomType, pageRequest);
-        } else if (StringUtils.hasText(roomName) && roomType != null) {
-            roomPage = GetAllByNameAndType(roomName, roomType, pageRequest);
         } else {
             roomPage = roomRepository.findAll(pageRequest);
         }
 
-        return roomPage.map(roomMapper::roomToRoomDto);
+        return roomPage.map(roomMapper::roomToRoomResponse);
     }
 
-    private Page<Room> GetAllByNameAndType(String roomName, RoomType roomType, Pageable pageRequest) {
-        return roomRepository.findAllByRoomNameIsLikeIgnoreCaseAndRoomType(roomName, roomType, pageRequest);
+    @Override
+    public Page<RoomResponse> getAllByRoomStatus(RoomStatus roomStatus) {
+        return null;
     }
 
-    private Page<Room> getAllByRoomType(RoomType roomType, Pageable pageRequest) {
-        return roomRepository.findAllByRoomType(roomType, pageRequest);
-    }
 
     private Page<Room> getAllByName(String roomName, Pageable pageRequest) {
         return roomRepository.findAllByRoomNameIsLikeIgnoreCase("%" + roomName + "%", pageRequest);
@@ -102,104 +97,37 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomDTO saveRoom(RoomDTO roomDTO) {
-        Room saveRoom = roomMapper.roomDtoToRoom(roomDTO);
-        if(roomDTO.getBuildingId() != null){
-            Building building = buildingRepository.findById(roomDTO.getBuildingId()).orElseThrow(NotFoundException::new);
-            roomRepository.save(saveRoom);
-            building.getRooms().add(saveRoom);
-        }else{
-            Dormitory dormitory = dormitoryRepository.findById(roomDTO.getDormitoryId()).orElseThrow(NotFoundException::new);
-            roomRepository.save(saveRoom);
-            dormitory.getRooms().add(saveRoom);
-        }
+    public RoomResponse saveRoom(RoomCreationRequest request) {
+        Room saveRoom = roomMapper.roomCreationToRoom(request);
+        saveRoom.setRoomId(UUID.randomUUID());
 
-        return roomMapper.roomToRoomDto(saveRoom);
+        HousesForRent housesForRent = housesForRentRepository.findById(request.getHousesForRentId()).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        saveRoom.setHousesForRent(housesForRent);
+
+        return roomMapper.roomToRoomResponse(saveRoom);
+
     }
 
     @Override
-    public Optional<RoomDTO> updateRoomById(UUID id, RoomDTO roomDTO) {
-        RoomDTO foundRoom = getRoomById(id).orElseThrow(NotFoundException::new);
+    public Optional<RoomResponse> updateRoomById(UUID id, RoomUpdateRequest request) {
+        Room room = roomRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        foundRoom.setRoomNumber(roomDTO.getRoomNumber());
-        foundRoom.setRoomName(roomDTO.getRoomName());
-        foundRoom.setFloorNumber(roomDTO.getFloorNumber());
-        foundRoom.setArea(roomDTO.getArea());
-        foundRoom.setPrice(roomDTO.getPrice());
-        foundRoom.setRoomType(roomDTO.getRoomType());
-        foundRoom.setElectricityDefault(roomDTO.getElectricityDefault());
-        foundRoom.setWaterDefault(roomDTO.getWaterDefault());
-        foundRoom.setMaxOccupants(roomDTO.getMaxOccupants());
-        foundRoom.setStatus(roomDTO.getStatus());
-        foundRoom.setDormitoryId(foundRoom.getDormitoryId());
-        foundRoom.setBuildingId(foundRoom.getBuildingId());
+        roomMapper.updateRoom(room, request);
 
-        Room updatedRoom = roomRepository.save(
-                roomMapper.roomDtoToRoom(foundRoom));
-        return Optional.of(roomMapper.roomToRoomDto(updatedRoom));
+        roomRepository.save(room);
+
+        return Optional.of(roomMapper.roomToRoomResponse(room));
     }
 
     @Override
     public void deleteRoomById(UUID id) {
-        Room room = roomRepository.findById(id).orElseThrow(NotFoundException::new);
+        Room room = roomRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        if(room.getBuilding() != null){
-            Building building = buildingRepository.findById(room.getBuilding().getBuildingId()).orElse(null);
-            assert building != null;
-            building.getRooms().remove(room);
-            roomRepository.delete(room);
-        }
-        else {
-            Dormitory dormitory = dormitoryRepository.findById(room.getDormitory().getDormitoryId()).orElse(null);
-            assert dormitory != null;
-            dormitory.getRooms().remove(room);
-            roomRepository.delete(room);
-        }
+        HousesForRent housesForRent = housesForRentRepository.findById(room.getHousesForRent().getId()).orElse(null);
+        assert housesForRent != null;
+        housesForRent.getRooms().remove(room);
+        roomRepository.delete(room);
     }
 
-    @Override
-    public Optional<RoomDTO> patchRoomId(UUID id, RoomDTO roomDTO) {
-        RoomDTO foundRoom = getRoomById(id).orElseThrow(NotFoundException::new);
 
-        if (roomDTO.getRoomNumber() != null) {
-            foundRoom.setRoomNumber(roomDTO.getRoomNumber());
-        }
-        if (StringUtils.hasText(foundRoom.getRoomName())) {
-            foundRoom.setRoomName(roomDTO.getRoomName());
-        }
-        if (roomDTO.getFloorNumber() != null) {
-            foundRoom.setFloorNumber(roomDTO.getFloorNumber());
-        }
-        if (roomDTO.getArea() != null) {
-            foundRoom.setArea(roomDTO.getArea());
-        }
-        if (roomDTO.getPrice() != null) {
-            foundRoom.setPrice(roomDTO.getPrice());
-        }
-        if (StringUtils.hasText(String.valueOf(roomDTO.getRoomType()))) {
-            foundRoom.setRoomType(roomDTO.getRoomType());
-        }
-        if (roomDTO.getElectricityDefault() != foundRoom.getElectricityDefault()) {
-            foundRoom.setElectricityDefault(roomDTO.getElectricityDefault());
-        }
-        if (roomDTO.getWaterDefault() != foundRoom.getWaterDefault()) {
-            foundRoom.setWaterDefault(roomDTO.getWaterDefault());
-        }
-        if (roomDTO.getMaxOccupants() != foundRoom.getMaxOccupants()) {
-            foundRoom.setMaxOccupants(roomDTO.getMaxOccupants());
-        }
-        if (roomDTO.getStatus() != foundRoom.getStatus()) {
-            foundRoom.setStatus(roomDTO.getStatus());
-        }
-        if (roomDTO.getRoomId() != foundRoom.getDormitoryId()) {
-            foundRoom.setDormitoryId(foundRoom.getDormitoryId());
-        }
-        if (roomDTO.getBuildingId() != foundRoom.getBuildingId()) {
-            foundRoom.setBuildingId(foundRoom.getBuildingId());
-        }
-
-        Room updatedRoom = roomRepository.save(
-                roomMapper.roomDtoToRoom(foundRoom));
-        return Optional.of(roomMapper.roomToRoomDto(updatedRoom));
-    }
 }

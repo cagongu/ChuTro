@@ -1,5 +1,7 @@
 package com.spring6framework.ChuTro.entities;
 
+import com.spring6framework.ChuTro.enums.ActiveStatus;
+import com.spring6framework.ChuTro.enums.TypeOfRental;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -10,22 +12,30 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "dormitory")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dormitory {
+public class HousesForRent {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID dormitoryId;
-    private String DormitoryName;
+    private UUID id;
+    private String name;
 
-    @OneToMany(mappedBy = "dormitory", cascade = CascadeType.ALL)
+    private TypeOfRental typeOfRental;
+
+    private int totalFloors;
+    private int totalRooms;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "housesForRent", cascade = CascadeType.ALL)
     private Set<Room> rooms = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
+
+    @Builder.Default
+    private ActiveStatus activeStatus = ActiveStatus.ACTIVE_STATUS;
 }

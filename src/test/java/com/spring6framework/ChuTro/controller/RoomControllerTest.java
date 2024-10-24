@@ -1,41 +1,43 @@
 package com.spring6framework.ChuTro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring6framework.ChuTro.entities.*;
+import com.spring6framework.ChuTro.Exception.AppException;
+import com.spring6framework.ChuTro.dto.request.RoomCreationRequest;
+import com.spring6framework.ChuTro.dto.request.RoomUpdateRequest;
+import com.spring6framework.ChuTro.dto.response.ApiResponse;
+import com.spring6framework.ChuTro.dto.response.RoomResponse;
+import com.spring6framework.ChuTro.entities.HousesForRent;
+import com.spring6framework.ChuTro.entities.Room;
+import com.spring6framework.ChuTro.enums.RoomStatus;
 import com.spring6framework.ChuTro.mappers.RoomMapper;
-import com.spring6framework.ChuTro.model.RoomDTO;
-import com.spring6framework.ChuTro.repositories.BuildingRepository;
-import com.spring6framework.ChuTro.repositories.DormitoryRepository;
+import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
 import com.spring6framework.ChuTro.repositories.RoomRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.given;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Slf4j
 class RoomControllerTest {
     @Autowired
     RoomController roomController;
@@ -47,10 +49,7 @@ class RoomControllerTest {
     RoomMapper roomMapper;
 
     @Autowired
-    BuildingRepository buildingRepository;
-
-    @Autowired
-    DormitoryRepository dormitoryRepository;
+    HousesForRentRepository housesForRentRepository;
 
     @Autowired
     WebApplicationContext wac;
@@ -66,115 +65,100 @@ class RoomControllerTest {
                 .build();
     }
 
-    private RoomDTO createNewRoom() {
-        return RoomDTO.builder()
-                .roomId(UUID.randomUUID())
+    private RoomCreationRequest createNewRoom() {
+        return RoomCreationRequest.builder()
                 .roomNumber(202L)
                 .roomName("Room test")
                 .floorNumber(2L)
                 .area(50.0)
-                .price(5500000.0)
-                .roomType(RoomType.Building)
+                .rentalPrice(5500000.0)
                 .electricityDefault(3500.0)
                 .waterDefault(20000.0)
                 .maxOccupants(3)
-                .status(RoomStatus.empty)
+                .status(RoomStatus.VACANT)
                 .build();
     }
 
     @Test
     void getAll() throws Exception {
-        Page<RoomDTO> dtos = roomController.getAll(null, null, null, null);
-
-        assertThat(dtos.getContent().size()).isGreaterThan(1);
+        ApiResponse<Page<RoomResponse>> response = roomController.getAll( null, null, null);
+        assertThat(response.getResult().getContent().size()).isGreaterThan(1);
     }
 
     @Test
-    void getById() throws Exception {
+    void getById() {
         Room room = roomRepository.findAll().getFirst();
-
-        RoomDTO dto = roomController.getRoomById(room.getRoomId());
-
-        assertThat(dto).isNotNull();
+        ApiResponse<RoomResponse> response = roomController.getRoomById(room.getRoomId());
+        assertThat(response.getResult()).isNotNull();
     }
 
     @Test
     void getByIdNotFound() {
-        assertThrows(NotFoundException.class, () -> roomController.getRoomById(UUID.randomUUID()));
+        assertThrows(AppException.class, () -> {
+            roomController.getRoomById(UUID.randomUUID());
+        });
     }
 
     @Transactional
     @Test
     void saveNewRoom() throws Exception {
-        RoomDTO roomDTO = createNewRoom();
-        Dormitory dormitory = dormitoryRepository.findAll().getFirst();
-        roomDTO.setDormitoryId(dormitory.getDormitoryId());
+        RoomCreationRequest request = createNewRoom();
 
-        ResponseEntity<RoomDTO> responseEntity = roomController.saveNewRoom(roomDTO);
+        List<HousesForRent> dormitories = housesForRentRepository.findAll();
+        if (dormitories.isEmpty()) {
+            throw new IllegalStateException("No dormitories found in the database.");
+        }
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
-        assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+        HousesForRent housesForRent = dormitories.get(0);
+        request.setHousesForRentId(housesForRent.getId());
 
-        String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
-        UUID savedUUID = UUID.fromString(locationUUID[4]);
+        ApiResponse<ResponseEntity<RoomResponse>> response = roomController.saveNewRoom(request);
+
+        assertThat(response.getResult().getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getResult().getHeaders().getLocation()).isNotNull();
+
+        String[] locationUUID = response.getResult().getHeaders().getLocation().getPath().split("/");
+        UUID savedUUID = UUID.fromString(locationUUID[2]);
+
+        log.info("Saved Room UUID: {}", savedUUID.toString());
     }
 
     @Rollback
     @Transactional
     @Test
     void updateRoomById() throws Exception {
-        RoomDTO roomDTO = roomMapper.roomToRoomDto(roomRepository.findAll().getFirst());
+        Room room = roomRepository.findAll().getFirst();
 
-        roomDTO.setArea(10000.0);
+        RoomUpdateRequest request = RoomUpdateRequest.builder()
+                .area(10001.0)
+                .build();
 
-        mockMvc.perform(put(RoomController.ROOM_PATH_ID, roomDTO.getRoomId())
+        mockMvc.perform(put(RoomController.ROOM_PATH_ID, room.getRoomId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(roomDTO)))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
-        Room updatedRoom = roomRepository.findById(roomDTO.getRoomId()).orElse(null);
+        Room updatedRoom = roomRepository.findById(room.getRoomId()).orElse(null);
         assertNotNull(updatedRoom, "Room should not be null");
-
-        assertEquals(10000.0, updatedRoom.getArea(), "Area should be updated to 10000.0");
+        assertEquals(10001.0, updatedRoom.getArea(), "Area should be updated to 10001.0");
     }
 
     @Test
     void updateRoomByIdNotFound() {
-        assertThrows(NotFoundException.class, () -> roomController.updateRoomById(UUID.randomUUID(), createNewRoom()));
+        RoomUpdateRequest request = RoomUpdateRequest.builder()
+                .area(10000.0)
+                .build();
+        assertThrows(AppException.class, () -> roomController.updateRoomById(UUID.randomUUID(), request));
     }
 
     @Rollback
     @Transactional
     @Test
-    void patchRoomById() throws Exception {
-        RoomDTO roomDTO = roomMapper.roomToRoomDto(roomRepository.findAll().get(1));
-
-        roomDTO.setRoomName("patch room");
-        roomDTO.setArea(120.0);
-
-        mockMvc.perform(patch(RoomController.ROOM_PATH_ID, roomDTO.getRoomId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(roomDTO)))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-
-        Room patchRoom = roomRepository.findById(roomDTO.getRoomId()).orElse(null);
-        assertNotNull(patchRoom);
-        assertEquals("patch room", patchRoom.getRoomName());
-        assertEquals(120.0, patchRoom.getArea());
-    }
-
-    @Rollback
-    @Transactional
-    @Test
-    public void deleteRoom() {
+    void deleteRoom() {
         Room room = roomRepository.findAll().getFirst();
-        RoomDTO roomDTO = roomMapper.roomToRoomDto(room);
-
-        ResponseEntity<RoomDTO> responseEntity = roomController.deleteRoomById(roomDTO.getRoomId());
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
+        ApiResponse<ResponseEntity<RoomResponse>> response = roomController.deleteRoomById(room.getRoomId());
+        assertThat(response.getResult().getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }

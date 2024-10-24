@@ -1,5 +1,7 @@
 package com.spring6framework.ChuTro.entities;
 
+import com.spring6framework.ChuTro.enums.FinancialStatus;
+import com.spring6framework.ChuTro.enums.RoomStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,10 +10,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "room")
 @Getter
 @Setter
 @Builder
@@ -24,12 +27,23 @@ public class Room {
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID roomId;
 
-    private Long roomNumber;
+    private int roomNumber;
     private String roomName;
-    private Long floorNumber;
+    private int floorNumber;
     private Double area;
-    private Double price;
-    private RoomType roomType;
+    private Double rentalPrice;
+    private Double depositAmount;
+    private Double debtAmount;
+    private int invoiceDate;
+    private int billingCycle;
+    private Timestamp moveInDate;
+    private Timestamp contractDuration;
+    private FinancialStatus financialStatus;
+
+    private RoomStatus status;
+    private double electricityDefault;
+    private double waterDefault;
+    private int maxOccupants;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -37,14 +51,10 @@ public class Room {
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
-    private RoomStatus status;
-    private double electricityDefault;
-    private double waterDefault;
-    private int maxOccupants;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
-    private Building building;
+    private HousesForRent housesForRent;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    private Dormitory dormitory;
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Service> services = new HashSet<>();
 }
