@@ -6,6 +6,7 @@ import com.spring6framework.ChuTro.dto.request.RoomCreationRequest;
 import com.spring6framework.ChuTro.dto.request.RoomUpdateRequest;
 import com.spring6framework.ChuTro.dto.response.ApiResponse;
 import com.spring6framework.ChuTro.dto.response.RoomResponse;
+import com.spring6framework.ChuTro.entities.Furniture;
 import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.entities.Room;
 import com.spring6framework.ChuTro.entities.Service;
@@ -78,6 +79,11 @@ class RoomControllerTest {
                 .build();
     }
 
+    private Furniture createFurniture(){
+        return Furniture.builder()
+                .name("asd").build();
+    }
+
     private RoomCreationRequest createNewRoom() {
         return RoomCreationRequest.builder()
                 .roomNumber(202L)
@@ -90,6 +96,7 @@ class RoomControllerTest {
                 .maxOccupants(3)
                 .status(RoomStatus.VACANT)
                 .services(new HashSet<>(Set.of(createService())))
+                .furnitures(new HashSet<>(Set.of(createFurniture())))
                 .build();
     }
 

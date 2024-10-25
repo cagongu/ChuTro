@@ -5,11 +5,14 @@ import com.spring6framework.ChuTro.Exception.ErrorCode;
 import com.spring6framework.ChuTro.dto.request.RoomCreationRequest;
 import com.spring6framework.ChuTro.dto.request.RoomUpdateRequest;
 import com.spring6framework.ChuTro.dto.response.RoomResponse;
+import com.spring6framework.ChuTro.entities.Furniture;
 import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.entities.Room;
 import com.spring6framework.ChuTro.enums.RoomStatus;
+import com.spring6framework.ChuTro.mappers.FurnitureMapper;
 import com.spring6framework.ChuTro.mappers.RoomMapper;
 import com.spring6framework.ChuTro.mappers.ServiceMapper;
+import com.spring6framework.ChuTro.repositories.FurnitureRepository;
 import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
 import com.spring6framework.ChuTro.repositories.RoomRepository;
 import com.spring6framework.ChuTro.repositories.ServiceRepository;
@@ -31,7 +34,9 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final HousesForRentRepository housesForRentRepository;
     private final ServiceRepository serviceRepository;
+    private final FurnitureRepository furnitureRepository;
     private final ServiceMapper serviceMapper;
+    private final FurnitureMapper furnitureMapper;
 
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_PAGE_SIZE = 25;
@@ -112,6 +117,7 @@ public class RoomServiceImpl implements RoomService {
         saveRoom.setRoomId(UUID.randomUUID());
 
         addService(request.getServices(), saveRoom);
+        addFurniture(request.getFurnitures(), saveRoom);
 
         HousesForRent housesForRent = housesForRentRepository.findById(request.getHousesForRentId()).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         saveRoom.setHousesForRent(housesForRent);
@@ -141,6 +147,31 @@ public class RoomServiceImpl implements RoomService {
             serviceRepository.saveAll(services);
 
             saveRoom.setServices(services);
+        }
+    }
+
+    private void addFurniture(Set<Furniture> request, Room saveRoom) {
+        if (request != null) {
+            Set<Furniture> furnitures = new HashSet<>();
+
+            request.forEach(furniture -> {
+                if (furniture.getFurnitureId() == null) {
+                    // Service mới, tạo UUID và thêm vào set
+                    furniture.setFurnitureId(UUID.randomUUID());
+                    furnitures.add(furniture);
+                } else {
+                    // Nếu Service đã có ID, tìm kiếm xem có trong DB không
+                    Furniture updateFurniture = furnitureRepository.findById(furniture.getFurnitureId())
+                            .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+                    // Cập nhật thông tin nếu cần
+                    furnitureMapper.updateFurniture(updateFurniture, furnitureMapper.furnitureToFurnitureRequest(furniture));
+                    furnitures.add(updateFurniture);
+                }
+            });
+
+            furnitureRepository.saveAll(furnitures);
+
+            saveRoom.setFurnitures(furnitures);
         }
     }
 

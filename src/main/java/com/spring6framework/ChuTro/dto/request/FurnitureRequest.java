@@ -1,4 +1,4 @@
-package com.spring6framework.ChuTro.entities;
+package com.spring6framework.ChuTro.dto.request;
 
 import com.spring6framework.ChuTro.enums.UnitOfMeasurement;
 import jakarta.persistence.Entity;
@@ -11,17 +11,12 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Furniture {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID furnitureId;
+public class FurnitureRequest {
     private String name;
     private String iconUrl;
     private double assetValue; //gia tri cua tai san

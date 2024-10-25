@@ -1,5 +1,6 @@
 package com.spring6framework.ChuTro.bootstrap;
 
+import com.spring6framework.ChuTro.entities.Furniture;
 import com.spring6framework.ChuTro.repositories.ServiceRepository;
 import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.entities.Room;
@@ -26,6 +27,20 @@ public class BootstrapData implements CommandLineRunner {
     public void run(String... args) throws Exception {
         loadHouseForRentData();
         loadRoomData();
+    }
+
+    private void addingFurniture(Room room){
+        if(room.getFurnitures().isEmpty()){
+            Furniture furniture = Furniture.builder()
+                    .name("Tủ lạnh")
+                    .assetValue(15000.0)
+                    .totalNumber(10)
+                    .unitOfMeasurement(UnitOfMeasurement.PIECE)
+                    .build();
+
+            room.getFurnitures().add(furniture);
+            roomRepository.save(room);
+        }
     }
 
     private void addingDefaultService(Room room) {
@@ -65,11 +80,6 @@ public class BootstrapData implements CommandLineRunner {
                     .servicePriceDefault(50000.0)
                     .unitOfMeasurement(UnitOfMeasurement.MONTH)
                     .build();
-
-//            serviceRepository.save(electric);
-//            serviceRepository.save(wifi);
-//            serviceRepository.save(trash);
-//            serviceRepository.save(water);
 
             room.getServices().add(electric);
             room.getServices().add(water);
@@ -260,8 +270,8 @@ public class BootstrapData implements CommandLineRunner {
             for (Room room : rooms) {
                 roomRepository.save(room);
                 addingDefaultService(room);
+                addingFurniture(room);
             }
-
         }
     }
 }
