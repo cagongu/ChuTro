@@ -9,20 +9,19 @@ import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.entities.Room;
 import com.spring6framework.ChuTro.enums.RoomStatus;
 import com.spring6framework.ChuTro.mappers.RoomMapper;
+import com.spring6framework.ChuTro.mappers.ServiceMapper;
 import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
 import com.spring6framework.ChuTro.repositories.RoomRepository;
+import com.spring6framework.ChuTro.repositories.ServiceRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,6 +30,8 @@ public class RoomServiceImpl implements RoomService {
     private final RoomMapper roomMapper;
     private final RoomRepository roomRepository;
     private final HousesForRentRepository housesForRentRepository;
+    private final ServiceRepository serviceRepository;
+    private final ServiceMapper serviceMapper;
 
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_PAGE_SIZE = 25;
@@ -45,7 +46,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Transactional
     @Override
-    public Page<RoomResponse> getAll(String roomName, Integer pageNumber, Integer pageSize) {
+    public Page<RoomResponse> getAll(String roomName, RoomStatus roomStatus, Integer pageNumber, Integer pageSize) {
         log.info("List Beers - in service");
 
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
@@ -54,6 +55,8 @@ public class RoomServiceImpl implements RoomService {
 
         if (StringUtils.hasText(roomName)) {
             roomPage = getAllByName(roomName, pageRequest);
+        } else if (roomStatus != null) {
+            roomPage = getAllByRoomStatus(roomStatus, pageRequest);
         } else {
             roomPage = roomRepository.findAll(pageRequest);
         }
@@ -61,9 +64,16 @@ public class RoomServiceImpl implements RoomService {
         return roomPage.map(roomMapper::roomToRoomResponse);
     }
 
-    @Override
-    public Page<RoomResponse> getAllByRoomStatus(RoomStatus roomStatus) {
-        return null;
+    private Page<Room> getAllByRoomStatus(RoomStatus roomStatus, PageRequest pageRequest) {
+        Page<Room> roomPage = roomRepository.findAll(pageRequest);
+
+        List<Room> filteredRooms = roomPage
+                .stream()
+                .filter(room -> room.getStatus() == roomStatus)
+                .collect(Collectors.toList());
+
+
+        return new PageImpl<>(filteredRooms, pageRequest, filteredRooms.size());
     }
 
 
@@ -101,11 +111,37 @@ public class RoomServiceImpl implements RoomService {
         Room saveRoom = roomMapper.roomCreationToRoom(request);
         saveRoom.setRoomId(UUID.randomUUID());
 
+        addService(request.getServices(), saveRoom);
+
         HousesForRent housesForRent = housesForRentRepository.findById(request.getHousesForRentId()).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         saveRoom.setHousesForRent(housesForRent);
 
         return roomMapper.roomToRoomResponse(saveRoom);
+    }
 
+    private void addService(Set<com.spring6framework.ChuTro.entities.Service> request, Room saveRoom) {
+        if (request != null) {
+            Set<com.spring6framework.ChuTro.entities.Service> services = new HashSet<>();
+
+            request.forEach(service -> {
+                if (service.getServiceId() == null) {
+                    // Service mới, tạo UUID và thêm vào set
+                    service.setServiceId(UUID.randomUUID());
+                    services.add(service);
+                } else {
+                    // Nếu Service đã có ID, tìm kiếm xem có trong DB không
+                    com.spring6framework.ChuTro.entities.Service updateService = serviceRepository.findById(service.getServiceId())
+                            .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+                    // Cập nhật thông tin nếu cần
+                    serviceMapper.updateService(updateService, serviceMapper.serviceToServiceRequest(service));
+                    services.add(updateService);
+                }
+            });
+
+            serviceRepository.saveAll(services);
+
+            saveRoom.setServices(services);
+        }
     }
 
     @Override

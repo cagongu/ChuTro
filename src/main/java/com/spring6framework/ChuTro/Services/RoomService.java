@@ -11,8 +11,7 @@ import java.util.UUID;
 
 public interface RoomService {
     Optional<RoomResponse> getRoomById(UUID id);
-    Page<RoomResponse> getAll(String roomName, Integer pageNumber, Integer pageSize);
-    Page<RoomResponse> getAllByRoomStatus(RoomStatus roomStatus);
+    Page<RoomResponse> getAll(String roomName,RoomStatus roomStatus, Integer pageNumber, Integer pageSize);
     RoomResponse saveRoom(RoomCreationRequest request);
     Optional<RoomResponse> updateRoomById(UUID id, RoomUpdateRequest request);
     void deleteRoomById(UUID id);

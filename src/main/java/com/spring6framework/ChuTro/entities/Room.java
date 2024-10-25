@@ -57,4 +57,8 @@ public class Room {
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Service> services = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Furniture> furnitures = new HashSet<>();
 }

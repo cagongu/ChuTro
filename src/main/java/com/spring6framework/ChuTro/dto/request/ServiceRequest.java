@@ -1,4 +1,4 @@
-package com.spring6framework.ChuTro.entities;
+package com.spring6framework.ChuTro.dto.request;
 
 import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.UnitOfMeasurement;
@@ -9,21 +9,15 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Service {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    private UUID serviceId;
+public class ServiceRequest {
     private String serviceName;
     private Double servicePriceDefault;
-    private long serviceMetrics; //so dien nuoc vv se duoc cap nhat o day
+    private long serviceMetrics;
     private CostType costType;
     private UnitOfMeasurement unitOfMeasurement;
 }

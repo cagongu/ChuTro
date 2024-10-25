@@ -1,5 +1,6 @@
 package com.spring6framework.ChuTro.dto.request;
 
+import com.spring6framework.ChuTro.entities.Furniture;
 import com.spring6framework.ChuTro.entities.Service;
 import com.spring6framework.ChuTro.enums.FinancialStatus;
 import com.spring6framework.ChuTro.enums.RoomStatus;
@@ -37,4 +38,6 @@ public class RoomCreationRequest {
 
     private UUID housesForRentId;
     private Set<Service> services;
+
+    private Set<Furniture> furnitures;
 }

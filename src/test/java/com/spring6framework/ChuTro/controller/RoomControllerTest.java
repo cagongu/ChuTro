@@ -8,6 +8,8 @@ import com.spring6framework.ChuTro.dto.response.ApiResponse;
 import com.spring6framework.ChuTro.dto.response.RoomResponse;
 import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.entities.Room;
+import com.spring6framework.ChuTro.entities.Service;
+import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.RoomStatus;
 import com.spring6framework.ChuTro.mappers.RoomMapper;
 import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
@@ -27,7 +29,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,6 +69,15 @@ class RoomControllerTest {
                 .build();
     }
 
+    private Service createService() {
+        return Service.builder()
+                .serviceName("service name")
+                .serviceMetrics(0)
+                .servicePriceDefault(12000.0)
+                .costType(CostType.FIXED)
+                .build();
+    }
+
     private RoomCreationRequest createNewRoom() {
         return RoomCreationRequest.builder()
                 .roomNumber(202L)
@@ -76,12 +89,13 @@ class RoomControllerTest {
                 .waterDefault(20000.0)
                 .maxOccupants(3)
                 .status(RoomStatus.VACANT)
+                .services(new HashSet<>(Set.of(createService())))
                 .build();
     }
 
     @Test
     void getAll() throws Exception {
-        ApiResponse<Page<RoomResponse>> response = roomController.getAll( null, null, null);
+        ApiResponse<Page<RoomResponse>> response = roomController.getAll(null, null, null, null);
         assertThat(response.getResult().getContent().size()).isGreaterThan(1);
     }
 

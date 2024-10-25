@@ -7,6 +7,7 @@ import com.spring6framework.ChuTro.dto.request.RoomCreationRequest;
 import com.spring6framework.ChuTro.dto.request.RoomUpdateRequest;
 import com.spring6framework.ChuTro.dto.response.ApiResponse;
 import com.spring6framework.ChuTro.dto.response.RoomResponse;
+import com.spring6framework.ChuTro.enums.RoomStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,9 +29,10 @@ public class RoomController {
 
     @GetMapping(ROOM_PATH)
     public ApiResponse<Page<RoomResponse>> getAll(@RequestParam(required = false) String roomName,
+                                                  @RequestParam(required = false) RoomStatus roomStatus,
                                                   @RequestParam(required = false) Integer pageNumber,
                                                   @RequestParam(required = false) Integer pageSize) {
-        Page<RoomResponse> rooms = roomService.getAll(roomName, pageNumber, pageSize);
+        Page<RoomResponse> rooms = roomService.getAll(roomName, roomStatus, pageNumber, pageSize);
 
         return ApiResponse.<Page<RoomResponse>>builder()
                 .result(rooms)

@@ -36,6 +36,7 @@ public class BootstrapData implements CommandLineRunner {
                     .serviceMetrics(0)
                     .costType(CostType.FIXED)
                     .servicePriceDefault(1700.0)
+                    .unitOfMeasurement(UnitOfMeasurement.KWH)
                     .build();
 
             Service water = Service.builder()
@@ -44,6 +45,7 @@ public class BootstrapData implements CommandLineRunner {
                     .serviceMetrics(0)
                     .costType(CostType.FIXED)
                     .servicePriceDefault(18000.0)
+                    .unitOfMeasurement(UnitOfMeasurement.CUBIC_METER)
                     .build();
 
             Service trash = Service.builder()
@@ -52,6 +54,7 @@ public class BootstrapData implements CommandLineRunner {
                     .serviceMetrics(0)
                     .costType(CostType.FIXED)
                     .servicePriceDefault(15000.0)
+                    .unitOfMeasurement(UnitOfMeasurement.MONTH)
                     .build();
 
             Service wifi = Service.builder()
@@ -60,12 +63,13 @@ public class BootstrapData implements CommandLineRunner {
                     .serviceMetrics(0)
                     .costType(CostType.FIXED)
                     .servicePriceDefault(50000.0)
+                    .unitOfMeasurement(UnitOfMeasurement.MONTH)
                     .build();
 
-            serviceRepository.save(electric);
-            serviceRepository.save(wifi);
-            serviceRepository.save(trash);
-            serviceRepository.save(water);
+//            serviceRepository.save(electric);
+//            serviceRepository.save(wifi);
+//            serviceRepository.save(trash);
+//            serviceRepository.save(water);
 
             room.getServices().add(electric);
             room.getServices().add(water);
