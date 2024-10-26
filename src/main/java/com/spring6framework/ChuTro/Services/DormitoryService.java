@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface DormitoryService {
     List<HousesForRentResponse> getAll();
     HousesForRentResponse getById(UUID uuid);
-    HousesForRentResponse updateHousesForRentById(UUID uuid, HousesForRentUpdateRequest request);
+    void updateHousesForRentById(UUID uuid, HousesForRentUpdateRequest request);
 
     HousesForRentResponse createNewDormitory(HousesForRentCreationRequest request);
 

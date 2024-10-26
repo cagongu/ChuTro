@@ -41,14 +41,14 @@ public class DormitoryServiceImpl implements DormitoryService {
     }
 
     @Override
-    public HousesForRentResponse updateHousesForRentById(UUID uuid, HousesForRentUpdateRequest request) {
+    public void updateHousesForRentById(UUID uuid, HousesForRentUpdateRequest request) {
         HousesForRent updateHousesForRent = housesForRentRepository.findById(uuid).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
         housesForRentMapper.updateDormitory(updateHousesForRent, request);
 
         housesForRentRepository.save(updateHousesForRent);
 
-        return housesForRentMapper.dormitoryToDormitoryResponse(updateHousesForRent);
+        housesForRentMapper.dormitoryToDormitoryResponse(updateHousesForRent);
     }
 
     @Override

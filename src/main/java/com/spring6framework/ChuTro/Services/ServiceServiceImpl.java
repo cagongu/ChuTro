@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Deprecated
 public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository serviceRepository;
     private final ServiceMapper serviceMapper;

@@ -61,4 +61,7 @@ public class Room {
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Furniture> furnitures = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Reservation reservation;
 }

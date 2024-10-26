@@ -15,6 +15,7 @@ public interface RoomMapper {
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "lastModifiedDate", ignore = true)
     @Mapping(source = "housesForRentId", target = "housesForRent.id")
+    @Mapping(target = "reservation", ignore = true)
     Room roomCreationToRoom(RoomCreationRequest request);
 
     @Mapping(source = "housesForRent.id", target = "housesForRentId")

@@ -6,6 +6,7 @@ import com.spring6framework.ChuTro.dto.response.ServiceResponse;
 import java.util.List;
 import java.util.UUID;
 
+@Deprecated
 public interface ServiceService {
     List<ServiceResponse> getAll();
     ServiceResponse getById(UUID serviceId);

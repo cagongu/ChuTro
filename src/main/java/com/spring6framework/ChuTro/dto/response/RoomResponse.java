@@ -1,6 +1,7 @@
 package com.spring6framework.ChuTro.dto.response;
 
 import com.spring6framework.ChuTro.entities.Furniture;
+import com.spring6framework.ChuTro.entities.Reservation;
 import com.spring6framework.ChuTro.entities.Service;
 import com.spring6framework.ChuTro.enums.FinancialStatus;
 import com.spring6framework.ChuTro.enums.RoomStatus;
@@ -44,4 +45,5 @@ public class RoomResponse {
     private UUID housesForRentId;
     private Set<Service> services;
     private Set<Furniture> furnitures;
+    private Reservation reservation;
 }

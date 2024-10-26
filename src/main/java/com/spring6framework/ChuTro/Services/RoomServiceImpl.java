@@ -7,15 +7,13 @@ import com.spring6framework.ChuTro.dto.request.RoomUpdateRequest;
 import com.spring6framework.ChuTro.dto.response.RoomResponse;
 import com.spring6framework.ChuTro.entities.Furniture;
 import com.spring6framework.ChuTro.entities.HousesForRent;
+import com.spring6framework.ChuTro.entities.Reservation;
 import com.spring6framework.ChuTro.entities.Room;
 import com.spring6framework.ChuTro.enums.RoomStatus;
 import com.spring6framework.ChuTro.mappers.FurnitureMapper;
 import com.spring6framework.ChuTro.mappers.RoomMapper;
 import com.spring6framework.ChuTro.mappers.ServiceMapper;
-import com.spring6framework.ChuTro.repositories.FurnitureRepository;
-import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
-import com.spring6framework.ChuTro.repositories.RoomRepository;
-import com.spring6framework.ChuTro.repositories.ServiceRepository;
+import com.spring6framework.ChuTro.repositories.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +35,7 @@ public class RoomServiceImpl implements RoomService {
     private final FurnitureRepository furnitureRepository;
     private final ServiceMapper serviceMapper;
     private final FurnitureMapper furnitureMapper;
+    private final ReservationRepository reservationRepository;
 
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_PAGE_SIZE = 25;
