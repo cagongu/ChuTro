@@ -64,4 +64,9 @@ public class Room {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Reservation reservation;
+
+    @OneToMany
+    private Set<Invoice> invoices;
+    @OneToMany
+    private Set<Contract> contracts;
 }

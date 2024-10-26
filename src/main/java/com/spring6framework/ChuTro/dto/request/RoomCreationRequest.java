@@ -1,6 +1,9 @@
 package com.spring6framework.ChuTro.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.spring6framework.ChuTro.entities.Contract;
 import com.spring6framework.ChuTro.entities.Furniture;
+import com.spring6framework.ChuTro.entities.Invoice;
 import com.spring6framework.ChuTro.entities.Service;
 import com.spring6framework.ChuTro.enums.FinancialStatus;
 import com.spring6framework.ChuTro.enums.RoomStatus;
@@ -40,4 +43,9 @@ public class RoomCreationRequest {
     private Set<Service> services;
 
     private Set<Furniture> furnitures;
+
+    @JsonIgnore
+    private Set<Invoice> invoices;
+    @JsonIgnore
+    private Set<Contract> contracts;
 }

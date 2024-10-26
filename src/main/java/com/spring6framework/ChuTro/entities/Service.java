@@ -1,5 +1,6 @@
 package com.spring6framework.ChuTro.entities;
 
+import com.spring6framework.ChuTro.enums.ActiveStatus;
 import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.UnitOfMeasurement;
 import jakarta.persistence.*;
@@ -26,4 +27,5 @@ public class Service {
     private long serviceMetrics; //so dien nuoc vv se duoc cap nhat o day
     private CostType costType;
     private UnitOfMeasurement unitOfMeasurement;
+    private ActiveStatus activeStatus;
 }

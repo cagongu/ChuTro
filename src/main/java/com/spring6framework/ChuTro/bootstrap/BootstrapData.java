@@ -21,7 +21,6 @@ import java.util.UUID;
 public class BootstrapData implements CommandLineRunner {
     private final RoomRepository roomRepository;
     private final HousesForRentRepository housesForRentRepository;
-    private final ServiceRepository serviceRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -125,6 +124,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room2 = Room.builder()
@@ -139,6 +139,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room3 = Room.builder()
@@ -153,6 +154,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room4 = Room.builder()
@@ -167,6 +169,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room5 = Room.builder()
@@ -181,6 +184,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room6 = Room.builder()
@@ -195,6 +199,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room7 = Room.builder()
@@ -209,6 +214,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room8 = Room.builder()
@@ -223,6 +229,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room9 = Room.builder()
@@ -237,6 +244,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
             Room room10 = Room.builder()
@@ -251,6 +259,7 @@ public class BootstrapData implements CommandLineRunner {
                     .maxOccupants(3)
                     .status(RoomStatus.VACANT)
                     .housesForRent(housesForRentRepository.findAll().getFirst())
+                    .contracts(null)
                     .build();
 
 

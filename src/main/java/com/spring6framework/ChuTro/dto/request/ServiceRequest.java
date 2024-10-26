@@ -1,5 +1,6 @@
 package com.spring6framework.ChuTro.dto.request;
 
+import com.spring6framework.ChuTro.enums.ActiveStatus;
 import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.UnitOfMeasurement;
 import jakarta.persistence.*;
@@ -20,4 +21,5 @@ public class ServiceRequest {
     private long serviceMetrics;
     private CostType costType;
     private UnitOfMeasurement unitOfMeasurement;
+    private ActiveStatus activeStatus;
 }

@@ -112,6 +112,10 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomResponse saveRoom(RoomCreationRequest request) {
+        if(request.getHousesForRentId() == null){
+            throw new RuntimeException("Create new room must have HousesForRentId");
+        }
+
         Room saveRoom = roomMapper.roomCreationToRoom(request);
         saveRoom.setRoomId(UUID.randomUUID());
 
@@ -185,6 +189,7 @@ public class RoomServiceImpl implements RoomService {
         return Optional.of(roomMapper.roomToRoomResponse(room));
     }
 
+//  chinh sua sau khi da them cac thuc the
     @Override
     public void deleteRoomById(UUID id) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
@@ -194,6 +199,4 @@ public class RoomServiceImpl implements RoomService {
         housesForRent.getRooms().remove(room);
         roomRepository.delete(room);
     }
-
-
 }

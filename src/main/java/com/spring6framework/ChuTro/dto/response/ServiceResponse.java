@@ -1,5 +1,6 @@
 package com.spring6framework.ChuTro.dto.response;
 
+import com.spring6framework.ChuTro.enums.ActiveStatus;
 import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.UnitOfMeasurement;
 import lombok.*;
@@ -18,4 +19,6 @@ public class ServiceResponse {
     private long serviceMetrics;
     private CostType costType;
     private UnitOfMeasurement unitOfMeasurement;
+    private ActiveStatus activeStatus;
+
 }

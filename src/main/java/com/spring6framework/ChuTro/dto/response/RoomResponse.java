@@ -1,8 +1,7 @@
 package com.spring6framework.ChuTro.dto.response;
 
-import com.spring6framework.ChuTro.entities.Furniture;
-import com.spring6framework.ChuTro.entities.Reservation;
-import com.spring6framework.ChuTro.entities.Service;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.spring6framework.ChuTro.entities.*;
 import com.spring6framework.ChuTro.enums.FinancialStatus;
 import com.spring6framework.ChuTro.enums.RoomStatus;
 import lombok.AllArgsConstructor;
@@ -46,4 +45,9 @@ public class RoomResponse {
     private Set<Service> services;
     private Set<Furniture> furnitures;
     private Reservation reservation;
+
+    @JsonIgnore
+    private Set<Invoice> invoices;
+    @JsonIgnore
+    private Set<Contract> contracts;
 }
