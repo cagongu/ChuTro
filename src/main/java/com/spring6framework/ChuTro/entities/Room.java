@@ -51,22 +51,24 @@ public class Room {
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private HousesForRent housesForRent;
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Service> services = new HashSet<>();
+    private Set<ServiceCustom> serviceCustoms = new HashSet<>();
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Furniture> furnitures = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Reservation reservation;
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private Set<Reservation> reservation = new HashSet<>();
 
     @OneToMany
     private Set<Invoice> invoices;
+
     @OneToMany
     private Set<Contract> contracts;
 }

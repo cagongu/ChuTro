@@ -30,7 +30,7 @@ public class HousesForRent {
     private int totalRooms;
 
     @Builder.Default
-    @OneToMany(mappedBy = "housesForRent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "housesForRent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Room> rooms = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -38,4 +38,8 @@ public class HousesForRent {
 
     @Builder.Default
     private ActiveStatus activeStatus = ActiveStatus.ACTIVE_STATUS;
+
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Service> services = new HashSet<>();
 }

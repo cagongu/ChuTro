@@ -1,5 +1,8 @@
 package com.spring6framework.ChuTro.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.spring6framework.ChuTro.entities.Service;
+import com.spring6framework.ChuTro.entities.ServiceCustom;
 import com.spring6framework.ChuTro.enums.ActiveStatus;
 import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.UnitOfMeasurement;
@@ -20,5 +23,4 @@ public class ServiceResponse {
     private CostType costType;
     private UnitOfMeasurement unitOfMeasurement;
     private ActiveStatus activeStatus;
-
 }

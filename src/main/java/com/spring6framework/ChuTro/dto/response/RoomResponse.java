@@ -42,9 +42,9 @@ public class RoomResponse {
     private int maxOccupants;
 
     private UUID housesForRentId;
-    private Set<Service> services;
+    private Set<ServiceCustom> serviceCustoms;
     private Set<Furniture> furnitures;
-    private Reservation reservation;
+    private Set<Reservation> reservation;
 
     @JsonIgnore
     private Set<Invoice> invoices;

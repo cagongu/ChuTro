@@ -5,17 +5,22 @@ import com.spring6framework.ChuTro.Exception.ErrorCode;
 import com.spring6framework.ChuTro.dto.request.HousesForRentCreationRequest;
 import com.spring6framework.ChuTro.dto.request.HousesForRentUpdateRequest;
 import com.spring6framework.ChuTro.dto.response.HousesForRentResponse;
+import com.spring6framework.ChuTro.entities.ServiceCustom;
 import com.spring6framework.ChuTro.enums.ActiveStatus;
 import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.mappers.HousesForRentMapper;
 import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
+import com.spring6framework.ChuTro.repositories.ServiceCustomRepository;
+import com.spring6framework.ChuTro.repositories.ServiceRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -23,8 +28,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DormitoryServiceImpl implements DormitoryService {
+    ServiceRepository serviceRepository;
     HousesForRentRepository housesForRentRepository;
     HousesForRentMapper housesForRentMapper;
+    ServiceCustomRepository serviceCustomRepository;
 
     @Override
     public List<HousesForRentResponse> getAll() {
@@ -56,6 +63,23 @@ public class DormitoryServiceImpl implements DormitoryService {
         HousesForRent housesForRent = housesForRentMapper.dormitoryCreationRequestToDormitory(request);
 
         housesForRent.setId(UUID.randomUUID());
+
+        Set<com.spring6framework.ChuTro.entities.Service> services = request.getServices();
+        List<ServiceCustom> serviceCustoms = new ArrayList<>();
+
+        for (com.spring6framework.ChuTro.entities.Service service : services){
+            service.setServiceId(UUID.randomUUID());
+            ServiceCustom serviceCustom = ServiceCustom.builder()
+                    .serviceCustomId(UUID.randomUUID())
+                    .service(service)
+                    .isActive(true)
+                    .build();
+
+            serviceCustoms.add(serviceCustom);
+        }
+        serviceRepository.saveAll(services);
+        serviceCustomRepository.saveAll(serviceCustoms);
+
 
         return housesForRentMapper.dormitoryToDormitoryResponse(housesForRentRepository.save(housesForRent));
     }

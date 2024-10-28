@@ -70,15 +70,6 @@ class RoomControllerTest {
                 .build();
     }
 
-    private Service createService() {
-        return Service.builder()
-                .serviceName("service name")
-                .serviceMetrics(0)
-                .servicePriceDefault(12000.0)
-                .costType(CostType.FIXED)
-                .build();
-    }
-
     private Furniture createFurniture(){
         return Furniture.builder()
                 .name("asd").build();
@@ -95,7 +86,6 @@ class RoomControllerTest {
                 .waterDefault(20000.0)
                 .maxOccupants(3)
                 .status(RoomStatus.VACANT)
-                .services(new HashSet<>(Set.of(createService())))
                 .furnitures(new HashSet<>(Set.of(createFurniture())))
                 .build();
     }

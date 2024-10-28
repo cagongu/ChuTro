@@ -38,8 +38,6 @@ public class ContractResponse {
     private Timestamp paymentDate;
     private String notes;
 
-    @JsonIgnore
-    private Set<Invoice> invoices;
-    @JsonIgnore
-    private Set<Contract> contracts;
+    private Boolean isCurrent;
+
 }

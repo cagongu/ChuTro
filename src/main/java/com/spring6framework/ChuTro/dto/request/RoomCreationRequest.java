@@ -1,10 +1,7 @@
 package com.spring6framework.ChuTro.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.spring6framework.ChuTro.entities.Contract;
-import com.spring6framework.ChuTro.entities.Furniture;
-import com.spring6framework.ChuTro.entities.Invoice;
-import com.spring6framework.ChuTro.entities.Service;
+import com.spring6framework.ChuTro.entities.*;
 import com.spring6framework.ChuTro.enums.FinancialStatus;
 import com.spring6framework.ChuTro.enums.RoomStatus;
 import lombok.AllArgsConstructor;
@@ -40,9 +37,10 @@ public class RoomCreationRequest {
     private int maxOccupants;
 
     private UUID housesForRentId;
-    private Set<Service> services;
+    private Set<ServiceCustom> serviceCustoms;
 
     private Set<Furniture> furnitures;
+//    private Reservation reservation;
 
     @JsonIgnore
     private Set<Invoice> invoices;

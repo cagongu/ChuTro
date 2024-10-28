@@ -35,10 +35,10 @@ public class RoomUpdateRequest {
     private double waterDefault;
     private int maxOccupants;
 
-    private Set<Service> services;
+    private Set<ServiceCustom> serviceCustoms;
     private Set<Furniture> furnitures;
 
-    private Reservation reservation;
+    private Set<Reservation> reservation;
 
     @JsonIgnore
     private Set<Invoice> invoices;

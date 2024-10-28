@@ -37,7 +37,8 @@ public class Contract {
     private String idCard;
     private Timestamp dob;
     private Gender gender;
-    private boolean isCurrent;
+
+    private Boolean isCurrent;
 
     @ManyToOne
     private Room room;

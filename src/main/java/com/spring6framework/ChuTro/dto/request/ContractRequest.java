@@ -28,4 +28,6 @@ public class ContractRequest {
 
     private Timestamp paymentDate;
     private String notes;
+
+    private Boolean isCurrent;
 }

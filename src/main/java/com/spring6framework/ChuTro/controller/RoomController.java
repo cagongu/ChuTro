@@ -48,16 +48,16 @@ public class RoomController {
 
     @PostMapping(ROOM_PATH)
     public ApiResponse<ResponseEntity<RoomResponse>> saveNewRoom(@RequestBody RoomCreationRequest request) {
-        RoomResponse saveRoom = roomService.saveRoom(request);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", ROOM_PATH + "/" + saveRoom.getRoomId().toString());
-
-        return ApiResponse.<ResponseEntity<RoomResponse>>builder()
-                .result(new ResponseEntity<>(headers, HttpStatus.CREATED))
-                .build();
-
-
+        try {
+            RoomResponse saveRoom = roomService.saveRoom(request);
+            return ApiResponse.<ResponseEntity<RoomResponse>>builder()
+                    .result(new ResponseEntity<>( saveRoom, HttpStatus.CREATED))
+                    .build();
+        }catch (Exception x){
+            return ApiResponse.<ResponseEntity<RoomResponse>>builder()
+                    .message(x.getMessage())
+                    .build();
+        }
     }
 
     @PutMapping(ROOM_PATH_ID)

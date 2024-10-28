@@ -1,5 +1,7 @@
 package com.spring6framework.ChuTro.dto.request;
 
+import com.spring6framework.ChuTro.entities.Service;
+import com.spring6framework.ChuTro.entities.ServiceCustom;
 import com.spring6framework.ChuTro.enums.ActiveStatus;
 import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.UnitOfMeasurement;

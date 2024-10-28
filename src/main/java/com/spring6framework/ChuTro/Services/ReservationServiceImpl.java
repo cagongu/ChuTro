@@ -36,7 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setReservationId(UUID.randomUUID());
 
         reservationRepository.save(reservation);
-        room.setReservation(reservation);
+        room.getReservation().add(reservation);
         roomRepository.save(room);
 
         return reservationMapper.reservationToReservationResponse(reservation);

@@ -13,14 +13,15 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
+public class ServiceCustom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID addressId;
-    private String province;
-    private String district;
-    private String ward;
-    private String streetDetail;
-    private String note;
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    private UUID serviceCustomId;
+
+    @ManyToOne
+    private Service service;
+
+    private Boolean isActive;// flag dung de kiem tra xem dich vu co duoc app dung cho phong khong.
 }
