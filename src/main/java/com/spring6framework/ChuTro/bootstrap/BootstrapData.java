@@ -84,7 +84,7 @@ public class BootstrapData implements CommandLineRunner {
                     .unitOfMeasurement(UnitOfMeasurement.MONTH)
                     .build();
 
-            HousesForRent housesForRent = housesForRentRepository.findAll().getFirst();
+            HousesForRent housesForRent = housesForRentRepository.findAll().get(0);
             housesForRent.getServices().add(electric);
             housesForRent.getServices().add(water);
             housesForRent.getServices().add(trash);
@@ -95,7 +95,7 @@ public class BootstrapData implements CommandLineRunner {
     }
 
     public void loadRoomData() {
-        HousesForRent housesForRent = housesForRentRepository.findAll().getFirst();
+        HousesForRent housesForRent = housesForRentRepository.findAll().get(0);
         if (roomRepository.count() == 0) {
             Room room1 = Room.builder()
                     .roomNumber(1)

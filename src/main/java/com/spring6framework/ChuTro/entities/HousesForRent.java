@@ -12,8 +12,8 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Getter
 @Setter
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,9 +29,13 @@ public class HousesForRent {
     private int totalFloors;
     private int totalRooms;
 
+    @Column(length = 36, columnDefinition = "varchar(36)")
+    private String ownerId;
+
     @Builder.Default
     @OneToMany(mappedBy = "housesForRent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Room> rooms = new HashSet<>();
+
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;

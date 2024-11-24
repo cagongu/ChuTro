@@ -9,8 +9,6 @@ import com.spring6framework.ChuTro.dto.response.RoomResponse;
 import com.spring6framework.ChuTro.entities.Furniture;
 import com.spring6framework.ChuTro.entities.HousesForRent;
 import com.spring6framework.ChuTro.entities.Room;
-import com.spring6framework.ChuTro.entities.Service;
-import com.spring6framework.ChuTro.enums.CostType;
 import com.spring6framework.ChuTro.enums.RoomStatus;
 import com.spring6framework.ChuTro.mappers.RoomMapper;
 import com.spring6framework.ChuTro.repositories.HousesForRentRepository;
@@ -98,7 +96,7 @@ class RoomControllerTest {
 
     @Test
     void getById() {
-        Room room = roomRepository.findAll().getFirst();
+        Room room = roomRepository.findAll().get(0);
         ApiResponse<RoomResponse> response = roomController.getRoomById(room.getRoomId());
         assertThat(response.getResult()).isNotNull();
     }
@@ -138,7 +136,7 @@ class RoomControllerTest {
     @Transactional
     @Test
     void updateRoomById() throws Exception {
-        Room room = roomRepository.findAll().getFirst();
+        Room room = roomRepository.findAll().get(0);
 
         RoomUpdateRequest request = RoomUpdateRequest.builder()
                 .area(10001.0)
@@ -168,7 +166,7 @@ class RoomControllerTest {
     @Transactional
     @Test
     void deleteRoom() {
-        Room room = roomRepository.findAll().getFirst();
+        Room room = roomRepository.findAll().get(0);
         ApiResponse<ResponseEntity<RoomResponse>> response = roomController.deleteRoomById(room.getRoomId());
         assertThat(response.getResult().getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

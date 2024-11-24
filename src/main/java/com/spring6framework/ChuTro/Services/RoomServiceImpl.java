@@ -137,19 +137,6 @@ public class RoomServiceImpl implements RoomService {
         return roomMapper.roomToRoomResponse(saveRoom);
     }
 
-//    private void addServiceCustom(Room room) {
-//        room.getHousesForRent().getServices().forEach(service -> {
-//            ServiceCustom serviceCustom = ServiceCustom.builder()
-//                    .service(service)
-//                    .isActive(true)
-//                    .build();
-//
-//            room.getServiceCustoms().add(serviceCustom);
-//        });
-//
-//        roomRepository.save(room);
-//    }
-
     private void addFurniture(Set<Furniture> request, UUID roomId) {
         Room saveRoom = roomRepository.findById(roomId).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 

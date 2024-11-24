@@ -20,7 +20,7 @@ public class ServiceCustom {
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID serviceCustomId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Service service;
 
     private Boolean isActive;// flag dung de kiem tra xem dich vu co duoc app dung cho phong khong.

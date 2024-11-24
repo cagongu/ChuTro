@@ -65,21 +65,8 @@ public class DormitoryServiceImpl implements DormitoryService {
         housesForRent.setId(UUID.randomUUID());
 
         Set<com.spring6framework.ChuTro.entities.Service> services = request.getServices();
-        List<ServiceCustom> serviceCustoms = new ArrayList<>();
 
-        for (com.spring6framework.ChuTro.entities.Service service : services){
-            service.setServiceId(UUID.randomUUID());
-            ServiceCustom serviceCustom = ServiceCustom.builder()
-                    .serviceCustomId(UUID.randomUUID())
-                    .service(service)
-                    .isActive(true)
-                    .build();
-
-            serviceCustoms.add(serviceCustom);
-        }
         serviceRepository.saveAll(services);
-        serviceCustomRepository.saveAll(serviceCustoms);
-
 
         return housesForRentMapper.dormitoryToDormitoryResponse(housesForRentRepository.save(housesForRent));
     }

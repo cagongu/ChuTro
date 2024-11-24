@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 @Data
@@ -20,6 +21,8 @@ public class HousesForRentCreationRequest {
     private TypeOfRental typeOfRental;
     private int totalFloors;
     private int totalRooms;
+    private String ownerId;
+
     private Address address;
     private ActiveStatus activeStatus;
     private Set<Service> services;

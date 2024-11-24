@@ -1,5 +1,6 @@
 package com.spring6framework.ChuTro.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring6framework.ChuTro.enums.FinancialStatus;
 import com.spring6framework.ChuTro.enums.RoomStatus;
 import jakarta.persistence.*;
@@ -51,6 +52,7 @@ public class Room {
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private HousesForRent housesForRent;
 

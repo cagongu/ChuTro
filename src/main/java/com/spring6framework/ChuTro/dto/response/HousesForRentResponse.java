@@ -1,5 +1,7 @@
 package com.spring6framework.ChuTro.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.spring6framework.ChuTro.entities.Room;
 import com.spring6framework.ChuTro.entities.Service;
 import com.spring6framework.ChuTro.enums.ActiveStatus;
 import com.spring6framework.ChuTro.entities.Address;
@@ -21,6 +23,10 @@ public class HousesForRentResponse {
     private TypeOfRental typeOfRental;
     private int totalFloors;
     private int totalRooms;
+    private String ownerId;
+
+    private Set<Room> rooms;
+
     private Address address;
     private ActiveStatus activeStatus;
     private Set<Service> services;

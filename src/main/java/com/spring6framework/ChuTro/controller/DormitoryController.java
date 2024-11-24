@@ -62,7 +62,7 @@ public class DormitoryController {
 
 
         return ApiResponse.<ResponseEntity<HousesForRentResponse>>builder()
-                .result(new ResponseEntity<>(headers, HttpStatus.CREATED))
+                .result(new ResponseEntity<>(housesForRentResponse,headers, HttpStatus.CREATED))
                 .build();
     }
 
