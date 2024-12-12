@@ -80,8 +80,6 @@ class RoomControllerTest {
                 .floorNumber(2L)
                 .area(50.0)
                 .rentalPrice(5500000.0)
-                .electricityDefault(3500.0)
-                .waterDefault(20000.0)
                 .maxOccupants(3)
                 .status(RoomStatus.VACANT)
                 .furnitures(new HashSet<>(Set.of(createFurniture())))

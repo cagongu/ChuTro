@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContractRequest {
-
     private int contactDuration;
     private Timestamp moveInDate;
     private Timestamp terminationDate;
@@ -29,5 +28,5 @@ public class ContractRequest {
     private Timestamp paymentDate;
     private String notes;
 
-    private Boolean isCurrent;
+    private Boolean current;
 }

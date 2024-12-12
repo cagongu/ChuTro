@@ -24,8 +24,8 @@ public class ContractResponse {
     private Timestamp moveInDate;
     private Timestamp terminationDate;
 
-    private LocalDate renewalDate;
-    private LocalDate renewalEndDate;
+    private Timestamp renewalDate;
+    private Timestamp renewalEndDate;
 
     private int memberCount;
     private String tenantName;
@@ -34,10 +34,11 @@ public class ContractResponse {
     private Timestamp dob;
     private Gender gender;
 
+    @JsonIgnore
     private Room room;
     private Timestamp paymentDate;
     private String notes;
 
-    private Boolean isCurrent;
+    private Boolean current;
 
 }

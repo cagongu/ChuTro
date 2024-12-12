@@ -38,6 +38,13 @@ public class ReservationController {
                 .build();
     }
 
+    @GetMapping(RESERVATION_PATH + "/currentReservation/{roomId}")
+    public ApiResponse<ReservationResponse> getCurrentReservation(@PathVariable("roomId") UUID roomId) {
+        return ApiResponse.<ReservationResponse>builder()
+                .result(  reservationService.getCurrentReservation(roomId))
+                .build();
+    }
+
     @DeleteMapping(RESERVATION_PATH + "/{roomId}")
     public ApiResponse<ResponseEntity<Void>> cancelReservation(@PathVariable UUID roomId) {
         reservationService.cancelReservation(roomId);

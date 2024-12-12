@@ -20,7 +20,6 @@ import java.util.UUID;
 public class ServiceRequest {
     private String serviceName;
     private Double servicePriceDefault;
-    private long serviceMetrics;
     private CostType costType;
     private UnitOfMeasurement unitOfMeasurement;
     private ActiveStatus activeStatus;

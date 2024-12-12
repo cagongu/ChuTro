@@ -9,5 +9,8 @@ public interface ReservationService {
     ReservationResponse createReservation(UUID roomId, ReservationRequest request);
     ReservationResponse getById(UUID uuid);
 
+    ReservationResponse getCurrentReservation(UUID roomId);
+
+
     void cancelReservation(UUID roomId);
 }

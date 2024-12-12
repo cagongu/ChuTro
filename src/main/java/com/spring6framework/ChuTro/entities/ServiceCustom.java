@@ -23,5 +23,7 @@ public class ServiceCustom {
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Service service;
 
+    private long serviceMetrics; //so dien nuoc vv se duoc cap nhat o day
+
     private Boolean isActive;// flag dung de kiem tra xem dich vu co duoc app dung cho phong khong.
 }

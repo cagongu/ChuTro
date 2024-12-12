@@ -12,4 +12,6 @@ public interface ReservationMapper {
     @Mapping(target = "reservationId", ignore = true)
     Reservation reservationRequestToReservation(ReservationRequest request);
     ReservationResponse reservationToReservationResponse(Reservation reservation);
+
+    Reservation reservationResponseToReservation(ReservationResponse response);
 }

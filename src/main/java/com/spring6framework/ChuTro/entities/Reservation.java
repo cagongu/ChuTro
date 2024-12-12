@@ -1,10 +1,9 @@
 package com.spring6framework.ChuTro.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.spring6framework.ChuTro.enums.ActiveStatus;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -23,13 +22,16 @@ public class Reservation {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID reservationId;
     private String description;
-
     private String tenantName;
     private String contactNumber;
-
     private Timestamp reservationDate;
     private double depositAmount;
     private Timestamp moveInDate;
-
+    private ActiveStatus status;
+    @Builder.Default
+    private boolean current = true;
     private String notes;
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdDate;
 }

@@ -24,7 +24,6 @@ public class Service {
     private UUID serviceId;
     private String serviceName;
     private Double servicePriceDefault;
-    private long serviceMetrics; //so dien nuoc vv se duoc cap nhat o day
     private CostType costType;
     private UnitOfMeasurement unitOfMeasurement;
     private ActiveStatus activeStatus;

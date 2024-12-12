@@ -31,6 +31,6 @@ public interface ContractMapper {
     @Mapping(target = "room", ignore = true)
     @Mapping(target = "paymentDate", ignore = true)
     @Mapping(target = "notes", ignore = true)
-    @Mapping(target = "isCurrent", ignore = true)
+    @Mapping(target = "current", ignore = true)
     void updateContract(@MappingTarget Contract contract, RenewContractRequest request);
 }

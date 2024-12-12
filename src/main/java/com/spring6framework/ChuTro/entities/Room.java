@@ -27,7 +27,6 @@ public class Room {
     @JdbcTypeCode(SqlTypes.CHAR)
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID roomId;
-
     private int roomNumber;
     private String roomName;
     private int floorNumber;
@@ -38,39 +37,33 @@ public class Room {
     private int invoiceDate;
     private int billingCycle;
     private Timestamp moveInDate;
-    private Timestamp contractDuration;
+    private int contractDuration;
     private FinancialStatus financialStatus;
-
     private RoomStatus status;
-    private double electricityDefault;
-    private double waterDefault;
     private int maxOccupants;
-
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdDate;
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
-
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private HousesForRent housesForRent;
-
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<ServiceCustom> serviceCustoms = new HashSet<>();
-
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Furniture> furnitures = new HashSet<>();
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Reservation> reservation = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Invoice> invoices;
 
-    @OneToMany
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Contract> contracts;
 }

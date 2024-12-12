@@ -27,12 +27,11 @@ public class RoomUpdateRequest {
     private int invoiceDate;
     private int billingCycle;
     private Timestamp moveInDate;
-    private Timestamp contractDuration;
+    private int contractDuration;
     private FinancialStatus financialStatus;
 
     private RoomStatus status;
-    private double electricityDefault;
-    private double waterDefault;
+
     private int maxOccupants;
 
     private Set<ServiceCustom> serviceCustoms;

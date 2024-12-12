@@ -37,7 +37,7 @@ public class HousesForRent {
     private Set<Room> rooms = new HashSet<>();
 
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
     @Builder.Default

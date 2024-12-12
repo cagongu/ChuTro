@@ -30,15 +30,13 @@ public class RoomResponse {
     private int invoiceDate;
     private int billingCycle;
     private Timestamp moveInDate;
-    private Timestamp contractDuration;
+    private int contractDuration;
     private FinancialStatus financialStatus;
 
     private Timestamp createdDate;
     private Timestamp lastModifiedDate;
 
     private RoomStatus status;
-    private double electricityDefault;
-    private double waterDefault;
     private int maxOccupants;
 
     private UUID housesForRentId;
@@ -48,6 +46,6 @@ public class RoomResponse {
 
     @JsonIgnore
     private Set<Invoice> invoices;
-    @JsonIgnore
-    private Set<Contract> contracts;
+
+    private Set<ContractResponse> contracts;
 }

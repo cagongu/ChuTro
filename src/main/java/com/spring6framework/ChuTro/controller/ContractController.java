@@ -33,11 +33,9 @@ public class ContractController {
     }
 
     @PutMapping(CONTRACT_PATH_ID)
-    public ApiResponse<ResponseEntity<ContractResponse>> renewContract(@PathVariable("contractId") UUID contractId, @RequestBody RenewContractRequest request){
-        ContractResponse contractResponse = contractService.renewContract(contractId, request);
-
-        return ApiResponse.<ResponseEntity<ContractResponse>>builder()
-                .result(new ResponseEntity<ContractResponse>(HttpStatus.OK))
+    public ApiResponse<ContractResponse> renewContract(@PathVariable("contractId") UUID contractId, @RequestBody RenewContractRequest request){
+        return ApiResponse.<ContractResponse>builder()
+                .result(contractService.renewContract(contractId, request))
                 .build();
     }
 
