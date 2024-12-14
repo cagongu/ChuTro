@@ -8,7 +8,6 @@ import org.hibernate.type.SqlTypes;
 import java.util.UUID;
 
 @Entity
-@Table(name = "address")
 @Getter
 @Setter
 @Builder
